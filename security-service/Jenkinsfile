@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_REGISTRY = 'karun45'
+        SERVICE_NAME = 'security-service'
+        VERSION = '1.0.1'  // Changed version number as a test
+    }
+    
+    stages {
+        stage('Build') {
+            steps {
+                bat 'mvn clean package -DskipTests'
+            }
+        }
+        
+        stage('Docker Build & Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    bat "docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%"
+                    bat "docker build -t %DOCKER_REGISTRY%/%SERVICE_NAME%:%VERSION% ."
+                    bat "docker push %DOCKER_REGISTRY%/%SERVICE_NAME%:%VERSION%"
+                }
+            }
+        }
+        
+        stage('Deploy to Kubernetes') {
+            steps {
+                withKubeConfig([credentialsId: 'kubernetes-config']) {
+                    bat "kubectl apply -f k8s/%SERVICE_NAME%.yaml"
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            bat "docker logout"
+            cleanWs()
+        }
+    }
+}
