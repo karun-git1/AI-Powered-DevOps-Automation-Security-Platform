@@ -1,0 +1,4 @@
+com\devops\devops\controller\DevOpsController.class
+com\devops\devops\DevOpsServiceApplication.class
+com\devops\devops\entity\PipelineRun.class
+com\devops\devops\repository\PipelineRunRepository.class

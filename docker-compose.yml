@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  devops-service:
+    build: ./devops-service
+    ports:
+      - "8081:8081"
+  
+  security-service:
+    build: ./security-service
+    ports:
+      - "8082:8082"
+  
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "8083:8083"
+  
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"

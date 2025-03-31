@@ -1,0 +1,4 @@
+com\devops\ai\entity\AILog.class
+com\devops\ai\controller\AIController.class
+com\devops\ai\repository\AILogRepository.class
+com\devops\ai\AiServiceApplication.class
